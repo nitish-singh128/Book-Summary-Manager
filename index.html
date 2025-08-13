@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Summary Manager</title>
+    <link rel="stylesheet" href="frontend/assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <div class="auth-header-bar">
+        <div class="header-content">
+            <h1>📚 Book Summary Manager</h1>
+            <div class="user-info">
+                <span id="userDisplay">Welcome User!</span>
+                <div class="header-actions">
+                    <a href="frontend/login.html" class="auth-link">Login</a>
+                    <a href="frontend/register.html" class="auth-link">Register</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1>📖 My Book Summaries</h1>
+            <div class="stats">
+                <span id="bookCount">0 books</span>
+            </div>
+        </div>
+
+        <div class="add-book-section">
+            <h2>Add New Book</h2>
+            <form id="bookForm">
+                <div class="form-group">
+                    <input type="text" id="bookTitle" placeholder="Book Title" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="bookAuthor" placeholder="Author" required>
+                </div>
+                <div class="form-group">
+                    <select id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Self-Help">Self-Help</option>
+                        <option value="Business">Business</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Science">Science</option>
+                        <option value="Philosophy">Philosophy</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea id="bookSummary" placeholder="Write your book summary here..." rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="number" id="bookRating" placeholder="Rating (1-5)" min="1" max="5" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="bookDate" required>
+                </div>
+                <button type="submit">Add Book Summary</button>
+            </form>
+        </div>
+
+        <div class="search-filter-section">
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Search books, authors, or summaries...">
+                <button id="searchBtn">🔍</button>
+            </div>
+            <div class="filter-bar">
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Business">Business</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Science">Science</option>
+                    <option value="Philosophy">Philosophy</option>
+                </select>
+                <select id="sortBy">
+                    <option value="date-desc">Newest First</option>
+                    <option value="date-asc">Oldest First</option>
+                    <option value="title-asc">Title A-Z</option>
+                    <option value="title-desc">Title Z-A</option>
+                    <option value="rating-desc">Highest Rated</option>
+                    <option value="rating-asc">Lowest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="books-container">
+            <div id="booksList"></div>
+            <div id="emptyState" style="display: none; text-align: center; margin: 2rem 0;"></div>
+        </div>
+    </div>
+
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="frontend/assets/js/excel-database.js"></script>
+    
+    <!-- Book Management Scripts -->
+    <script src="frontend/assets/js/app.js"></script>
+
+    <script>
+        // Initialize the app without authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📚 Book Summary Manager - Main Page Loaded');
+            console.log('🎯 No authentication required for main page');
+            
+            // Set current date as default
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookDate').value = today;
+            
+            // Initialize book manager directly without auth check
+            if (typeof BookManager !== 'undefined') {
+                const bookManager = new BookManager();
+                console.log('📖 Book Manager initialized for main page');
+            } else {
+                console.log('⚠️ BookManager not found, basic functionality available');
+            }
+        });
+    </script>
+</body>
+</html> 
