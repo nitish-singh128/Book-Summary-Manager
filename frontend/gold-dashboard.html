@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Dashboard - Book Summary Manager</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .gold-badge {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+        .enhanced-features {
+            background: linear-gradient(135deg, #fff9e6 0%, #ffeaa7 100%);
+            border: 2px solid #f39c12;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .enhanced-features h3 {
+            color: #f39c12;
+            margin-top: 0;
+        }
+        .feature-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .gold-btn {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+        }
+        .gold-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fff9e6 100%);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(243, 156, 18, 0.1);
+            text-align: center;
+            border: 1px solid #ffeaa7;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #f39c12;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .gold-exclusive {
+            background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .enhanced-search {
+            background: #fff9e6;
+            border: 1px solid #f39c12;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Gold Header -->
+        <div class="auth-header-bar">
+            <div class="user-info">
+                <span class="welcome-text">Welcome, <strong id="userDisplayName">Loading...</strong></span>
+                <span class="gold-badge">🥇 GOLD</span>
+                <span class="login-time" id="loginTime"></span>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
+        </div>
+
+        <header>
+            <h1>🥇 Gold Dashboard - Book Summary Manager</h1>
+            <p>Enhanced features with advanced search and personal data export</p>
+        </header>
+
+        <!-- Gold Exclusive Features -->
+        <div class="gold-exclusive">
+            <h3>🥇 Gold Member Benefits</h3>
+            <p>Enjoy enhanced features including advanced search, personal data export, and priority access to new features!</p>
+        </div>
+
+        <!-- Gold Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">My Books</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgRating">0.0</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="topGenre">-</div>
+                <div class="stat-label">Favorite Genre</div>
+            </div>
+        </div>
+
+        <!-- Enhanced Features -->
+        <div class="enhanced-features">
+            <h3>⭐ Enhanced Features</h3>
+            <p>Access advanced tools and enhanced functionality</p>
+            <div class="feature-buttons">
+                <button class="gold-btn" onclick="exportPersonalData()">📊 Export My Data</button>
+                <button class="gold-btn" onclick="advancedSearch()">🔍 Advanced Search</button>
+                <button class="gold-btn" onclick="readingGoals()">🎯 Reading Goals</button>
+                <button class="gold-btn" onclick="bookRecommendations()">💡 Smart Recommendations</button>
+            </div>
+        </div>
+
+        <!-- Enhanced Search -->
+        <div class="enhanced-search">
+            <h3>🔍 Enhanced Search & Filters</h3>
+            <div class="filters" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <input type="text" id="searchInput" placeholder="Enhanced search...">
+                <select id="ratingFilter">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="add-book-section">
+            <h2>📚 Add New Book</h2>
+            <form id="bookForm">
+                <div class="form-group">
+                    <input type="text" id="bookTitle" placeholder="Book Title" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="bookAuthor" placeholder="Author" required>
+                </div>
+                <div class="form-group">
+                    <select id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Self-Help">Self-Help</option>
+                        <option value="Business">Business</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Science">Science</option>
+                        <option value="Philosophy">Philosophy</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="rating-input">
+                        <label for="bookRating">Rating:</label>
+                        <div class="stars" id="starsContainer">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="bookRating" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="bookSummary" placeholder="Book Summary (Gold members get extended character limit...)" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bookDate">Date Read:</label>
+                    <input type="date" id="bookDate" required>
+                </div>
+                <button type="submit">🥇 Add Book Summary</button>
+            </form>
+        </div>
+
+        <div class="filter-section">
+            <h2>📖 My Book Collection</h2>
+            <div class="filters">
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Business">Business</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Science">Science</option>
+                    <option value="Philosophy">Philosophy</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="author">Author A-Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="booksContainer" class="books-container">
+            <!-- Books will be displayed here -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">🥇</div>
+            <h3>No books found</h3>
+            <p>Add your first book summary to get started with Gold features!</p>
+        </div>
+    </div>
+
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- Authentication Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Gold-specific functions
+        function exportPersonalData() {
+            alert('🥇 Exporting your personal book data...\nThis Gold feature exports all your books and basic analytics.');
+            if (window.excelDB) {
+                window.excelDB.saveToProjectFolder();
+            }
+        }
+        
+        function advancedSearch() {
+            alert('🔍 Advanced Search (Gold Feature)\nSearch by:\n• Keywords in title/author/summary\n• Rating ranges\n• Date ranges\n• Multiple genres');
+        }
+        
+        function readingGoals() {
+            alert('🎯 Reading Goals (Gold Feature)\nSet and track your reading goals:\n• Books per month/year\n• Pages per day\n• Genre diversity goals\n• Reading streak tracking');
+        }
+        
+        function bookRecommendations() {
+            const books = JSON.parse(localStorage.getItem('books') || '[]');
+            const userBooks = books.filter(book => book.addedBy === getCurrentUser());
+            
+            let recommendations = '💡 Smart Recommendations (Gold Feature)\n\n';
+            if (userBooks.length > 0) {
+                const genres = [...new Set(userBooks.map(book => book.genre))];
+                recommendations += `Based on your reading history (${genres.join(', ')}), we recommend:\n`;
+                recommendations += '• "Atomic Habits" by James Clear\n';
+                recommendations += '• "The Lean Startup" by Eric Ries\n';
+                recommendations += '• "Sapiens" by Yuval Noah Harari\n';
+            } else {
+                recommendations += 'Add some books to get personalized recommendations!';
+            }
+            
+            alert(recommendations);
+        }
+        
+        function getCurrentUser() {
+            const authData = JSON.parse(localStorage.getItem('authData') || sessionStorage.getItem('authData') || '{}');
+            return authData.username || 'Unknown';
+        }
+        
+        // Update statistics
+        function updateGoldStats() {
+            const books = JSON.parse(localStorage.getItem('books') || '[]');
+            const userBooks = books.filter(book => book.addedBy === getCurrentUser());
+            
+            document.getElementById('totalBooks').textContent = userBooks.length;
+            
+            if (userBooks.length > 0) {
+                const avgRating = (userBooks.reduce((sum, book) => sum + book.rating, 0) / userBooks.length).toFixed(1);
+                document.getElementById('avgRating').textContent = avgRating;
+                
+                const genreCounts = {};
+                userBooks.forEach(book => {
+                    genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+                });
+                const topGenre = Object.keys(genreCounts).reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b, '-');
+                document.getElementById('topGenre').textContent = topGenre;
+            }
+        }
+        
+        // Set login time
+        const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (currentUser.lastLogin) {
+            document.getElementById('loginTime').textContent = 
+                'Last login: ' + new Date(currentUser.lastLogin).toLocaleString();
+        }
+        
+        // Initialize star rating functionality
+        function initStarRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('bookRating');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    ratingInput.value = rating;
+                    
+                    // Update star display
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.add('active');
+                            s.style.color = '#f39c12';
+                        } else {
+                            s.classList.remove('active');
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+                
+                // Hover effect
+                star.addEventListener('mouseover', () => {
+                    const rating = index + 1;
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.style.color = '#f39c12';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+            
+            // Reset on mouse leave
+            document.getElementById('starsContainer').addEventListener('mouseleave', () => {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                stars.forEach((s, i) => {
+                    if (i < currentRating) {
+                        s.style.color = '#f39c12';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            updateGoldStats();
+            initStarRating();
+            
+            // Update user display name
+            const userDisplayName = document.getElementById('userDisplayName');
+            if (userDisplayName && window.authManager) {
+                userDisplayName.textContent = window.authManager.getUserDisplayName();
+            }
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookDate').value = today;
+            
+            // Update stats when a book is added
+            const originalAddBook = window.BookManager?.prototype?.addBook;
+            if (originalAddBook) {
+                window.BookManager.prototype.addBook = function(...args) {
+                    const result = originalAddBook.apply(this, args);
+                    setTimeout(updateGoldStats, 100);
+                    return result;
+                };
+            }
+        });
+    </script>
+</body>
+</html> 

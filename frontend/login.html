@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Book Summary Manager</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>📚 Book Summary Manager</h1>
+                <p>Please sign in to access your book collection</p>
+            </div>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <div class="form-group">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <label for="rememberMe" class="checkbox-label">Remember me</label>
+                </div>
+                
+                <button type="submit" class="auth-btn">Sign In</button>
+                
+                <div id="errorMessage" class="error-message" style="display: none;"></div>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html" class="auth-link">Sign Up</a></p>
+                <div class="demo-accounts">
+                    <p><small><strong>Demo Accounts:</strong></small></p>
+                    <p><small>🔑 Admin: <strong>Admin/Admin</strong> (Full system access)</small></p>
+                    <p><small>💎 Diamond: <strong>Diamond/Diamond</strong> (Premium tier - highest privileges)</small></p>
+                    <p><small>🥇 Gold: <strong>Gold/Gold</strong> (Mid-tier privileges)</small></p>
+                    <p><small>🥈 Silver: <strong>Silver/Silver</strong> (Basic premium privileges)</small></p>
+                    <p><small>👤 User: <strong>User/User</strong> (Standard access)</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- Authentication Reset -->
+    <script src="assets/js/reset-auth.js"></script>
+    
+    <!-- Authentication Scripts -->
+    <script src="assets/js/auth.js"></script>
+</body>
+</html> 

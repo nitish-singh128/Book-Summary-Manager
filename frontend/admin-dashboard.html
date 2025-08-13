@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Book Summary Manager</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .admin-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .admin-controls {
+            background: #f8f9ff;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .admin-controls h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .admin-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        .admin-btn:hover {
+            background: #5a67d8;
+        }
+        .admin-btn.danger {
+            background: #e53e3e;
+        }
+        .admin-btn.danger:hover {
+            background: #c53030;
+        }
+        .user-list {
+            margin-top: 15px;
+        }
+        .user-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .user-name {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: #2d3748;
+        }
+        .user-email {
+            color: #718096;
+            font-size: 0.9em;
+        }
+        .credential-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .credential-platinum {
+            background: linear-gradient(135deg, #9f7aea 0%, #667eea 100%);
+            color: white;
+        }
+        .credential-gold {
+            background: linear-gradient(135deg, #f6e05e 0%, #d69e2e 100%);
+            color: #744210;
+        }
+        .credential-silver {
+            background: linear-gradient(135deg, #cbd5e0 0%, #a0aec0 100%);
+            color: #2d3748;
+        }
+        .user-details {
+            font-size: 0.9em;
+            color: #4a5568;
+            margin-top: 8px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .book-date {
+            color: #666;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .book-metadata {
+            margin-top: 10px;
+            color: #888;
+            font-size: 0.85em;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+        }
+        .book-summary {
+            margin: 15px 0;
+            line-height: 1.6;
+            color: #444;
+        }
+        .book-summary.expanded {
+            max-height: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Admin Header -->
+        <div class="auth-header-bar">
+            <div class="user-info">
+                <span class="welcome-text">Welcome, <strong id="userDisplayName">Loading...</strong></span>
+                <span class="admin-badge">ADMIN</span>
+                <span class="login-time" id="loginTime"></span>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
+        </div>
+
+        <header>
+            <h1> Admin Dashboard - Book Summary Manager</h1>
+            <p>Full administrative access to manage books, users, and system settings</p>
+        </header>
+
+        <!-- Admin Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">2</div>
+                <div class="stat-label">Registered Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgRating">0.0</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="topGenre">-</div>
+                <div class="stat-label">Top Genre</div>
+            </div>
+        </div>
+
+        <!-- Admin Controls -->
+        <div class="admin-controls">
+            <h3> Administrative Controls</h3>
+            <p>Full system access - manage all data and users</p>
+            <div class="admin-buttons">
+                <button class="admin-btn" onclick="exportAllData()">Export All Data</button>
+                <button class="admin-btn" onclick="viewSystemLogs()">System Logs</button>
+                <button class="admin-btn" onclick="manageUsers()">Manage Users</button>
+                <button class="admin-btn" onclick="viewUserStats()">User Statistics</button>
+                <button class="admin-btn" onclick="backupDatabase()">Backup Database</button>
+                <button class="admin-btn" onclick="systemSettings()">System Settings</button>
+                <button class="admin-btn danger" onclick="deleteRegisteredUsers()">Delete Registered Users</button>
+                <button class="admin-btn danger" onclick="clearAllData()">Reset Everything</button>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="admin-controls" id="userManagementSection" style="display: none;">
+            <h3>🔐 User Management</h3>
+            <p>View and manage registered users with their credential levels</p>
+            <div style="margin: 15px 0;">
+                <button class="admin-btn" onclick="refreshUserList()">Refresh User List</button>
+                <button class="admin-btn" onclick="toggleUserManagement()">Hide User Management</button>
+            </div>
+            <div id="userListContainer">
+                <div class="user-list">
+                    <!-- Users will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="add-book-section">
+            <h2>Add New Book</h2>
+            <form id="bookForm">
+                <div class="form-group">
+                    <input type="text" id="bookTitle" placeholder="Book Title" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="bookAuthor" placeholder="Author" required>
+                </div>
+                <div class="form-group">
+                    <select id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Self-Help">Self-Help</option>
+                        <option value="Business">Business</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Science">Science</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="rating-input">
+                        <label for="bookRating">Rating:</label>
+                        <div class="stars" id="starsContainer">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="bookRating" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="bookSummary" placeholder="Book Summary (key insights, lessons learned...)" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bookDate">Date Read:</label>
+                    <input type="date" id="bookDate" required>
+                </div>
+                <button type="submit"> Add Book Summary</button>
+            </form>
+        </div>
+
+        <div class="filter-section">
+            <h2>Book Collection Management</h2>
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="Search books...">
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Business">Business</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Science">Science</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="author">Author A-Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="booksContainer" class="books-container">
+            <!-- Books will be displayed here -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon"> </div>
+            <h3>No books found</h3>
+            <p>Add your first book summary or adjust your search filters.</p>
+        </div>
+    </div>
+
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- Authentication Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Admin-specific functions
+        function exportAllData() {
+            alert('Exporting all system data...\nThis feature would export books and user data.');
+            // Call the database export function
+            if (window.excelDB) {
+                window.excelDB.saveToProjectFolder();
+            }
+        }
+        
+        function viewSystemLogs() {
+            alert('System Logs:\n- Admin login successful\n- Database initialized\n- Demo users created');
+            console.log('System activity logs would be displayed here');
+        }
+        
+        function manageUsers() {
+            toggleUserManagement();
+            refreshUserList();
+        }
+
+        function toggleUserManagement() {
+            const section = document.getElementById('userManagementSection');
+            if (section.style.display === 'none' || section.style.display === '') {
+                section.style.display = 'block';
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        async function refreshUserList() {
+            const userListContainer = document.querySelector('.user-list');
+            
+            try {
+                // Wait for Excel database to be ready
+                if (!window.excelDB) {
+                    throw new Error('Excel database not initialized');
+                }
+                
+                await window.excelDB.waitForInit();
+                
+                // Get all users
+                const users = window.excelDB.users || [];
+                
+                if (users.length === 0) {
+                    userListContainer.innerHTML = '<p>No users found in the database.</p>';
+                    return;
+                }
+                
+                // Generate user cards HTML
+                let userCardsHTML = '';
+                users.forEach(user => {
+                    const credentialClass = user.credentialLevel ? `credential-${user.credentialLevel}` : 'credential-silver';
+                    const credentialText = user.credentialLevel ? user.credentialLevel.toUpperCase() : user.role.toUpperCase();
+                    const joinDate = new Date(user.createdAt).toLocaleDateString();
+                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never';
+                    
+                    userCardsHTML += `
+                        <div class="user-card">
+                            <div class="user-header">
+                                <div class="user-info">
+                                    <div class="user-name">${user.fullName || user.username}</div>
+                                    <div class="user-email">${user.email}</div>
+                                </div>
+                                <div class="credential-badge ${credentialClass}">${credentialText}</div>
+                            </div>
+                            <div class="user-details">
+                                <strong>Username:</strong> ${user.username} | 
+                                <strong>Role:</strong> ${user.role} | 
+                                <strong>Joined:</strong> ${joinDate} | 
+                                <strong>Last Login:</strong> ${lastLogin} |
+                                <strong>Status:</strong> ${user.isActive ? 'Active' : 'Inactive'}
+                                ${user.permissions ? `<br><strong>Permissions:</strong> ${user.permissions.join(', ')}` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                userListContainer.innerHTML = userCardsHTML;
+                
+                // Update section title with count
+                const sectionTitle = document.querySelector('#userManagementSection h3');
+                sectionTitle.textContent = `🔐 User Management (${users.length} users)`;
+                
+            } catch (error) {
+                console.error('Error loading users:', error);
+                userListContainer.innerHTML = '<p style="color: red;">Error loading users: ' + error.message + '</p>';
+            }
+        }
+        
+        function backupDatabase() {
+            alert('Creating database backup...');
+            if (window.excelDB) {
+                window.excelDB.saveToProjectFolder();
+                alert('Database backup created and ready for download!');
+            }
+        }
+        
+        function systemSettings() {
+            alert('System Settings:\n- User registration: Enabled\n- OTP verification: Enabled\n- Database auto-save: Enabled\n\nThis feature would allow system configuration.');
+        }
+        
+        async function deleteRegisteredUsers() {
+            if (!window.excelDB) {
+                alert('❌ Database not initialized');
+                return;
+            }
+
+            // Get current stats
+            const stats = window.excelDB.getUserStats();
+            
+            if (stats.registered === 0) {
+                alert('ℹ️ No registered users to delete.\nOnly demo accounts exist in the database.');
+                return;
+            }
+
+            const message = `⚠️ DELETE REGISTERED USERS\n\n` +
+                `This will delete ${stats.registered} registered user accounts.\n` +
+                `Demo accounts will be preserved.\n\n` +
+                `Registered users: ${stats.registered}\n` +
+                `Demo accounts: ${stats.demo}\n` +
+                `Total OTPs: ${stats.totalOTPs}\n\n` +
+                `Are you sure you want to continue?`;
+
+            if (confirm(message)) {
+                if (confirm('⚠️ FINAL CONFIRMATION\n\nThis action cannot be undone!\n\nDelete all registered user accounts?')) {
+                    try {
+                        const result = await window.excelDB.deleteAllRegisteredUsers();
+                        
+                        if (result.success) {
+                            let successMessage = `✅ USER DELETION COMPLETE\n\n`;
+                            successMessage += `Deleted: ${result.deletedCount} registered accounts\n`;
+                            successMessage += `Remaining: ${result.remainingCount} demo accounts\n\n`;
+                            
+                            if (result.deletedUsers.length > 0) {
+                                successMessage += `Deleted users:\n`;
+                                result.deletedUsers.forEach(user => {
+                                    successMessage += `• ${user.username} (${user.email})\n`;
+                                });
+                            }
+                            
+                            successMessage += `\n🔄 Refreshing user list...`;
+                            alert(successMessage);
+                            
+                            // Refresh user list if visible
+                            const userSection = document.getElementById('userManagementSection');
+                            if (userSection && userSection.style.display !== 'none') {
+                                refreshUserList();
+                            }
+                            
+                        } else {
+                            alert(`❌ Error deleting users: ${result.error}`);
+                        }
+                        
+                    } catch (error) {
+                        alert(`❌ Failed to delete users: ${error.message}`);
+                    }
+                }
+            }
+        }
+
+        async function viewUserStats() {
+            if (!window.excelDB) {
+                alert('❌ Database not initialized');
+                return;
+            }
+
+            try {
+                await window.excelDB.waitForInit();
+                const stats = window.excelDB.getUserStats();
+                
+                let statsMessage = `📊 USER DATABASE STATISTICS\n\n`;
+                statsMessage += `👥 Total Users: ${stats.total}\n`;
+                statsMessage += `📝 Registered Users: ${stats.registered}\n`;
+                statsMessage += `🎭 Demo Accounts: ${stats.demo}\n\n`;
+                
+                statsMessage += `🏷️ USER ROLES:\n`;
+                Object.keys(stats.roles).forEach(role => {
+                    const count = stats.roles[role];
+                    const emoji = {
+                        'admin': '⚙️',
+                        'platinum': '💎',
+                        'gold': '🥇',
+                        'silver': '🥈',
+                        'diamond': '💠',
+                        'user': '👤'
+                    }[role] || '📋';
+                    statsMessage += `${emoji} ${role.charAt(0).toUpperCase() + role.slice(1)}: ${count}\n`;
+                });
+                
+                statsMessage += `\n📧 OTP DATA:\n`;
+                statsMessage += `🔐 Active OTPs: ${stats.activeOTPs}\n`;
+                statsMessage += `📝 Total OTPs: ${stats.totalOTPs}\n`;
+                statsMessage += `🔗 Active Sessions: ${stats.sessions}\n`;
+                
+                alert(statsMessage);
+                
+            } catch (error) {
+                alert(`❌ Error getting stats: ${error.message}`);
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ RESET EVERYTHING\n\nWARNING: This will delete:\n• ALL user accounts (including registered users)\n• ALL books and data\n• ALL OTPs and sessions\n• ALL localStorage data\n\nDemo accounts will be recreated.\n\nAre you sure you want to continue?')) {
+                if (confirm('🚨 FINAL WARNING\n\nThis action cannot be undone!\n\nReset everything and reload the page?')) {
+                    // Clear localStorage completely
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    
+                    alert('🔄 All data cleared!\n\nPage will reload and demo accounts will be recreated.');
+                    window.location.reload();
+                }
+            }
+        }
+        
+        // Update statistics when books change
+        function updateAdminStats() {
+            const books = JSON.parse(localStorage.getItem('books') || '[]');
+            
+            document.getElementById('totalBooks').textContent = books.length;
+            
+            if (books.length > 0) {
+                const avgRating = (books.reduce((sum, book) => sum + book.rating, 0) / books.length).toFixed(1);
+                document.getElementById('avgRating').textContent = avgRating;
+                
+                const genreCounts = {};
+                books.forEach(book => {
+                    genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+                });
+                const topGenre = Object.keys(genreCounts).reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b, '-');
+                document.getElementById('topGenre').textContent = topGenre;
+            }
+        }
+        
+        // Update stats on page load and when books are added
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAdminStats();
+            
+            // Update user display name
+            if (window.updateUserDisplay) {
+                updateUserDisplay();
+            } else {
+                // Fallback: directly update user display if updateUserDisplay function not available
+                const userDisplayName = document.getElementById('userDisplayName');
+                if (userDisplayName && window.authManager) {
+                    userDisplayName.textContent = window.authManager.getUserDisplayName();
+                }
+            }
+            
+            // Update stats when a book is added
+            const originalAddBook = window.BookManager?.prototype?.addBook;
+            if (originalAddBook) {
+                window.BookManager.prototype.addBook = function(...args) {
+                    const result = originalAddBook.apply(this, args);
+                    setTimeout(updateAdminStats, 100);
+                    return result;
+                };
+            }
+        });
+        
+        // Set login time
+        const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (currentUser.lastLogin) {
+            document.getElementById('loginTime').textContent = 
+                'Last login: ' + new Date(currentUser.lastLogin).toLocaleString();
+        }
+        
+        // Initialize star rating functionality
+        function initStarRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('bookRating');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    ratingInput.value = rating;
+                    
+                    // Update star display
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.add('active');
+                            s.style.color = '#ffd700';
+                        } else {
+                            s.classList.remove('active');
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+                
+                // Hover effect
+                star.addEventListener('mouseover', () => {
+                    const rating = index + 1;
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.style.color = '#ffd700';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+            
+            // Reset on mouse leave
+            document.getElementById('starsContainer').addEventListener('mouseleave', () => {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                stars.forEach((s, i) => {
+                    if (i < currentRating) {
+                        s.style.color = '#ffd700';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        }
+        
+        // Initialize star rating when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initStarRating();
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookDate').value = today;
+        });
+    </script>
+</body>
+</html> 

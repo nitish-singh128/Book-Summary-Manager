@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Summary Manager - Simple Dashboard</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Simple Header -->
+        <div class="auth-header-bar">
+            <div class="user-info">
+                <span class="welcome-text">Welcome, <strong id="userDisplayName">Loading...</strong></span>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
+        </div>
+
+        <header>
+            <h1>Book Summary Manager</h1>
+            <p>Keep track of your favorite books and their key insights</p>
+        </header>
+
+        <div class="add-book-section">
+            <h2>Add New Book</h2>
+            <form id="bookForm">
+                <div class="form-group">
+                    <input type="text" id="bookTitle" placeholder="Book Title" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="bookAuthor" placeholder="Author" required>
+                </div>
+                <div class="form-group">
+                    <select id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Self-Help">Self-Help</option>
+                        <option value="Business">Business</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Science">Science</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="rating-input">
+                        <label for="bookRating">Rating:</label>
+                        <div class="stars" id="starsContainer">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="bookRating" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="bookSummary" placeholder="Book Summary (key insights, lessons learned...)" rows="4" required></textarea>
+                </div>
+                <button type="submit">Add Book</button>
+            </form>
+        </div>
+
+        <div class="filter-section">
+            <h2>Your Book Collection</h2>
+            <div class="filters">
+                <input type="text" id="searchInput" placeholder="Search books...">
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Business">Business</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Science">Science</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="author">Author A-Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="booksContainer" class="books-container">
+            <!-- Books will be displayed here -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">📚</div>
+            <h3>No books found</h3>
+            <p>Add your first book summary or adjust your search filters.</p>
+        </div>
+    </div>
+
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- Authentication Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Update user display name when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update user display name
+            const userDisplayName = document.getElementById('userDisplayName');
+            if (userDisplayName && window.authManager) {
+                userDisplayName.textContent = window.authManager.getUserDisplayName();
+            }
+            
+            // Initialize star rating functionality
+            initStarRating();
+        });
+        
+        // Initialize star rating functionality
+        function initStarRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('bookRating');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    ratingInput.value = rating;
+                    
+                    // Update star display
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.add('active');
+                            s.style.color = '#667eea';
+                        } else {
+                            s.classList.remove('active');
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+                
+                // Hover effect
+                star.addEventListener('mouseover', () => {
+                    const rating = index + 1;
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.style.color = '#667eea';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+            
+            // Reset on mouse leave
+            document.getElementById('starsContainer').addEventListener('mouseleave', () => {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                stars.forEach((s, i) => {
+                    if (i < currentRating) {
+                        s.style.color = '#667eea';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html> 

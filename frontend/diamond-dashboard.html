@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diamond Dashboard - Book Summary Manager</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        .diamond-badge {
+            background: linear-gradient(135deg, #b83dba 0%, #6c5ce7 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(184, 61, 186, 0.3);
+        }
+        .premium-features {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+            border: 2px solid #b83dba;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .premium-features h3 {
+            color: #b83dba;
+            margin-top: 0;
+        }
+        .feature-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, #b83dba 0%, #6c5ce7 100%);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(184, 61, 186, 0.3);
+        }
+        .premium-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 61, 186, 0.4);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(184, 61, 186, 0.1);
+            text-align: center;
+            border: 1px solid #e8ecff;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #b83dba;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .diamond-exclusive {
+            background: linear-gradient(135deg, #b83dba 0%, #6c5ce7 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .advanced-search {
+            background: #f8f9ff;
+            border: 1px solid #b83dba;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Diamond Header -->
+        <div class="auth-header-bar">
+            <div class="user-info">
+                <span class="welcome-text">Welcome, <strong id="userDisplayName">Loading...</strong></span>
+                <span class="diamond-badge">💎 DIAMOND</span>
+                <span class="login-time" id="loginTime"></span>
+            </div>
+            <button id="logoutBtn" class="logout-btn">Sign Out</button>
+        </div>
+
+        <header>
+            <h1>💎 Diamond Dashboard - Book Summary Manager</h1>
+            <p>Premium tier access with advanced features and bulk operations</p>
+        </header>
+
+        <!-- Diamond Exclusive Features -->
+        <div class="diamond-exclusive">
+            <h3>💎 Diamond Exclusive Features</h3>
+            <p>Enjoy the highest tier of premium access with advanced analytics, bulk operations, and priority support!</p>
+        </div>
+
+        <!-- Diamond Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="totalBooks">0</div>
+                <div class="stat-label">My Books</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgRating">0.0</div>
+                <div class="stat-label">Average Rating</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="topGenre">-</div>
+                <div class="stat-label">Favorite Genre</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="readingStreak">0</div>
+                <div class="stat-label">Reading Streak</div>
+            </div>
+        </div>
+
+        <!-- Premium Features -->
+        <div class="premium-features">
+            <h3>🚀 Premium Features</h3>
+            <p>Access advanced tools and bulk operations</p>
+            <div class="feature-buttons">
+                <button class="premium-btn" onclick="exportPersonalData()">📊 Export My Data</button>
+                <button class="premium-btn" onclick="bulkImport()">📁 Bulk Import Books</button>
+                <button class="premium-btn" onclick="advancedAnalytics()">📈 Advanced Analytics</button>
+                <button class="premium-btn" onclick="bulkOperations()">⚡ Bulk Operations</button>
+                <button class="premium-btn" onclick="prioritySupport()">🎯 Priority Support</button>
+                <button class="premium-btn" onclick="customThemes()">🎨 Custom Themes</button>
+            </div>
+        </div>
+
+        <!-- Advanced Search -->
+        <div class="advanced-search">
+            <h3>🔍 Advanced Search & Filters</h3>
+            <div class="filters" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <input type="text" id="searchInput" placeholder="Advanced search...">
+                <input type="date" id="dateFilter" placeholder="Filter by date">
+                <select id="ratingFilter">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="add-book-section">
+            <h2>📚 Add New Book</h2>
+            <form id="bookForm">
+                <div class="form-group">
+                    <input type="text" id="bookTitle" placeholder="Book Title" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="bookAuthor" placeholder="Author" required>
+                </div>
+                <div class="form-group">
+                    <select id="bookGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Self-Help">Self-Help</option>
+                        <option value="Business">Business</option>
+                        <option value="Technology">Technology</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Science">Science</option>
+                        <option value="Philosophy">Philosophy</option>
+                        <option value="Psychology">Psychology</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="rating-input">
+                        <label for="bookRating">Rating:</label>
+                        <div class="stars" id="starsContainer">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="bookRating" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <textarea id="bookSummary" placeholder="Book Summary (Diamond members get unlimited characters...)" rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="bookDate">Date Read:</label>
+                    <input type="date" id="bookDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookTags">Tags (Diamond feature):</label>
+                    <input type="text" id="bookTags" placeholder="Add tags separated by commas">
+                </div>
+                <button type="submit">💎 Add Book Summary</button>
+            </form>
+        </div>
+
+        <div class="filter-section">
+            <h2>📖 My Book Collection</h2>
+            <div class="filters">
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="Self-Help">Self-Help</option>
+                    <option value="Business">Business</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Science">Science</option>
+                    <option value="Philosophy">Philosophy</option>
+                    <option value="Psychology">Psychology</option>
+                    <option value="Other">Other</option>
+                </select>
+                <select id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title">Title A-Z</option>
+                    <option value="author">Author A-Z</option>
+                    <option value="rating">Highest Rated</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="booksContainer" class="books-container">
+            <!-- Books will be displayed here -->
+        </div>
+
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <div class="empty-icon">💎</div>
+            <h3>No books found</h3>
+            <p>Add your first book summary to get started with Diamond features!</p>
+        </div>
+    </div>
+
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- Authentication Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    
+    <script>
+        // Diamond-specific functions
+        function exportPersonalData() {
+            alert('💎 Exporting your personal book data...\nThis premium feature exports all your books and reading analytics.');
+            if (window.excelDB) {
+                window.excelDB.saveToProjectFolder();
+            }
+        }
+        
+        function bulkImport() {
+            alert('📁 Bulk Import (Diamond Feature)\nThis would allow you to import multiple books from CSV/Excel files.');
+        }
+        
+        function advancedAnalytics() {
+            const books = JSON.parse(localStorage.getItem('books') || '[]');
+            const userBooks = books.filter(book => book.addedBy === getCurrentUser());
+            
+            let analytics = '📈 Advanced Analytics (Diamond Feature)\n\n';
+            analytics += `📚 Total Books: ${userBooks.length}\n`;
+            analytics += `⭐ Average Rating: ${userBooks.length ? (userBooks.reduce((sum, book) => sum + book.rating, 0) / userBooks.length).toFixed(1) : 0}\n`;
+            analytics += `📅 Books This Month: ${userBooks.filter(book => new Date(book.dateAdded).getMonth() === new Date().getMonth()).length}\n`;
+            analytics += `🔥 Reading Streak: ${Math.floor(Math.random() * 30) + 1} days\n`;
+            
+            alert(analytics);
+        }
+        
+        function bulkOperations() {
+            alert('⚡ Bulk Operations (Diamond Feature)\nSelect multiple books to:\n• Bulk delete\n• Bulk export\n• Bulk edit tags\n• Bulk rating update');
+        }
+        
+        function prioritySupport() {
+            alert('🎯 Priority Support (Diamond Feature)\nDiamond members get 24/7 priority support with dedicated assistance.');
+        }
+        
+        function customThemes() {
+            alert('🎨 Custom Themes (Diamond Feature)\nChoose from premium themes:\n• Dark Diamond\n• Purple Luxury\n• Gold Accent\n• Custom CSS');
+        }
+        
+        function getCurrentUser() {
+            const authData = JSON.parse(localStorage.getItem('authData') || sessionStorage.getItem('authData') || '{}');
+            return authData.username || 'Unknown';
+        }
+        
+        // Update statistics
+        function updateDiamondStats() {
+            const books = JSON.parse(localStorage.getItem('books') || '[]');
+            const userBooks = books.filter(book => book.addedBy === getCurrentUser());
+            
+            document.getElementById('totalBooks').textContent = userBooks.length;
+            
+            if (userBooks.length > 0) {
+                const avgRating = (userBooks.reduce((sum, book) => sum + book.rating, 0) / userBooks.length).toFixed(1);
+                document.getElementById('avgRating').textContent = avgRating;
+                
+                const genreCounts = {};
+                userBooks.forEach(book => {
+                    genreCounts[book.genre] = (genreCounts[book.genre] || 0) + 1;
+                });
+                const topGenre = Object.keys(genreCounts).reduce((a, b) => genreCounts[a] > genreCounts[b] ? a : b, '-');
+                document.getElementById('topGenre').textContent = topGenre;
+            }
+            
+            // Simulate reading streak
+            document.getElementById('readingStreak').textContent = Math.floor(Math.random() * 30) + 1;
+        }
+        
+        // Set login time
+        const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (currentUser.lastLogin) {
+            document.getElementById('loginTime').textContent = 
+                'Last login: ' + new Date(currentUser.lastLogin).toLocaleString();
+        }
+        
+        // Initialize star rating functionality
+        function initStarRating() {
+            const stars = document.querySelectorAll('.star');
+            const ratingInput = document.getElementById('bookRating');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    const rating = index + 1;
+                    ratingInput.value = rating;
+                    
+                    // Update star display
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.classList.add('active');
+                            s.style.color = '#b83dba';
+                        } else {
+                            s.classList.remove('active');
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+                
+                // Hover effect
+                star.addEventListener('mouseover', () => {
+                    const rating = index + 1;
+                    stars.forEach((s, i) => {
+                        if (i < rating) {
+                            s.style.color = '#b83dba';
+                        } else {
+                            s.style.color = '#ddd';
+                        }
+                    });
+                });
+            });
+            
+            // Reset on mouse leave
+            document.getElementById('starsContainer').addEventListener('mouseleave', () => {
+                const currentRating = parseInt(ratingInput.value) || 0;
+                stars.forEach((s, i) => {
+                    if (i < currentRating) {
+                        s.style.color = '#b83dba';
+                    } else {
+                        s.style.color = '#ddd';
+                    }
+                });
+            });
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            updateDiamondStats();
+            initStarRating();
+            
+            // Update user display name
+            const userDisplayName = document.getElementById('userDisplayName');
+            if (userDisplayName && window.authManager) {
+                userDisplayName.textContent = window.authManager.getUserDisplayName();
+            }
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookDate').value = today;
+            
+            // Update stats when a book is added
+            const originalAddBook = window.BookManager?.prototype?.addBook;
+            if (originalAddBook) {
+                window.BookManager.prototype.addBook = function(...args) {
+                    const result = originalAddBook.apply(this, args);
+                    setTimeout(updateDiamondStats, 100);
+                    return result;
+                };
+            }
+        });
+    </script>
+</body>
+</html> 

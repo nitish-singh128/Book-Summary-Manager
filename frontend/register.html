@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Book Summary Manager</title>
+    <link rel="stylesheet" href="assets/css/auth.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Registration Form -->
+            <div id="registrationStep" class="auth-step">
+                <div class="auth-header">
+                    <h1>📚 Create Account</h1>
+                    <p>Join Book Summary Manager to start organizing your reading</p>
+                </div>
+                
+                <form id="registrationForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required placeholder="Choose a username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" required placeholder="+1234567890" pattern="^\+?[1-9]\d{1,14}$">
+                        <small class="credential-hint">Include country code (e.g., +1 for US, +91 for India)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Create a password">
+                        <small class="password-hint">Must be at least 6 characters long</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="credentialLevel">Credential Level</label>
+                        <select id="credentialLevel" name="credentialLevel" required>
+                            <option value="">Select your credential level</option>
+                            <option value="platinum">Platinum - Premium Access</option>
+                            <option value="gold">Gold - Enhanced Features</option>
+                            <option value="silver">Silver - Basic Premium</option>
+                        </select>
+                        <small class="credential-hint">Choose your membership tier for access to different features</small>
+                    </div>
+                    
+                    <button type="submit" class="auth-btn" id="registerBtn">
+                        <span class="btn-text">Create Account</span>
+                        <span class="btn-loader" style="display: none;">Creating...</span>
+                    </button>
+                    
+                    <div id="registrationMessage" class="error-message" style="display: none;"></div>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html" class="auth-link">Sign In</a></p>
+                </div>
+            </div>
+
+            <!-- OTP Verification Step -->
+            <div id="otpStep" class="auth-step" style="display: none;">
+                <div class="auth-header">
+                    <h1>🔐 Verify Your Identity</h1>
+                    <p id="otpInstructions">We've sent a 6-digit code to your email and mobile number</p>
+                </div>
+                
+                <form id="otpForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="otpCode">Enter OTP Code</label>
+                        <input type="text" id="otpCode" name="otpCode" required placeholder="000000" maxlength="6" class="otp-input">
+                    </div>
+                    
+                    <button type="submit" class="auth-btn" id="verifyBtn">
+                        <span class="btn-text">Verify & Complete Registration</span>
+                        <span class="btn-loader" style="display: none;">Verifying...</span>
+                    </button>
+                    
+                    <div class="otp-actions">
+                        <button type="button" id="resendOtpBtn" class="resend-btn">
+                            Didn't receive code? <span class="resend-text">Resend OTP</span>
+                        </button>
+                        <div id="resendTimer" class="resend-timer" style="display: none;">
+                            Resend available in <span id="timerCount">60</span>s
+                        </div>
+                    </div>
+                    
+                    <div id="otpMessage" class="error-message" style="display: none;"></div>
+                </form>
+                
+                <div class="auth-footer">
+                    <button type="button" id="backToRegister" class="back-btn">← Back to Registration</button>
+                </div>
+            </div>
+
+            <!-- Success Step -->
+            <div id="successStep" class="auth-step" style="display: none;">
+                <div class="auth-header">
+                    <h1>✅ Registration Complete!</h1>
+                    <p>Welcome to Book Summary Manager</p>
+                </div>
+                
+                <div class="success-content">
+                    <div class="success-icon">🎉</div>
+                    <p>Your account has been created successfully!</p>
+                    <p>You can now start managing your book summaries.</p>
+                </div>
+                
+                <button type="button" id="goToDashboard" class="auth-btn">
+                    Go to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SheetJS library for Excel operations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Excel Database Manager -->
+    <script src="assets/js/excel-database.js"></script>
+    
+    <!-- OTP Service -->
+    <script src="assets/js/otp-service.js"></script>
+    
+    <!-- Registration Scripts -->
+    <script src="assets/js/register.js"></script>
+</body>
+</html> 
